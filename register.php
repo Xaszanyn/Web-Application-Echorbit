@@ -6,74 +6,74 @@ require "./utilities/mail.php";
 
 $registry = post();
 
-// session_start();
+session_start();
 
-// switch ($registry["phase"]) {
-//     case "register":
-//         echo register($registry["email"]);
-//         break;
-//     case "confirm":
-//         echo confirm($registry["code"]);
-//         break;
-//     case "create":
-//         echo create($registry["code"], $registry["name"], $registry["phone"], $registry["address"], $registry["password"]);
-//         break;
-// }
+switch ($registry["phase"]) {
+    case "register":
+        echo register($registry["email"]);
+        break;
+    case "confirm":
+        echo confirm($registry["code"]);
+        break;
+    case "create":
+        echo create($registry["code"], $registry["password"]);
+        break;
+}
 
-// function register($email)
-// {
-//     if (isset($_SESSION["phase"]))
-//         session_destroy();
+function register($email)
+{
+    if (isset($_SESSION["phase"]))
+        session_destroy();
 
-//     if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-//         return json_encode(["status" => "email_invalid"]);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+        return json_encode(["status" => "email_invalid"]);
 
-//     if (!register_email_control($email))
-//         return json_encode(["status" => "email_used"]);
+    if (!register_email_control($email))
+        return json_encode(["status" => "email_used"]);
 
-//     $_SESSION["phase"] = "register";
-//     $_SESSION["email"] = $email;
-//     $_SESSION["code"] = mt_rand(10000, 99999);
-//     $_SESSION["attempt"] = 3;
-//     send_mail_text($_SESSION["email"], "Doğrulama Kodu", "Üyelik için doğrulama kodunuz <b>" . $_SESSION["code"] . "</b>.");
-//     return json_encode(["status" => "success"]);
-// }
+    $_SESSION["phase"] = "register";
+    $_SESSION["email"] = $email;
+    $_SESSION["code"] = mt_rand(100000, 999999);
+    $_SESSION["attempt"] = 3;
+    send_mail_text($_SESSION["email"], "VERIFICATION CODE", "VERIFICATION_CODE: <b>" . $_SESSION["code"] . "</b>.");
+    return json_encode(["status" => "success"]);
+}
 
-// function confirm($code)
-// {
-//     if (!isset($_SESSION["phase"]) || $_SESSION["phase"] != "register")
-//         return json_encode(["status" => "timeout"]);
+function confirm($code)
+{
+    if (!isset($_SESSION["phase"]) || $_SESSION["phase"] != "register")
+        return json_encode(["status" => "timeout"]);
 
-//     if (--$_SESSION["attempt"] < 0) {
-//         session_destroy();
-//         return json_encode(["status" => "maximum_attempt"]);
-//     }
+    if (--$_SESSION["attempt"] < 0) {
+        session_destroy();
+        return json_encode(["status" => "maximum_attempt"]);
+    }
 
-//     if ($code != $_SESSION["code"])
-//         return json_encode(["status" => "code_invalid"]);
+    if ($code != $_SESSION["code"])
+        return json_encode(["status" => "code_invalid"]);
 
-//     $_SESSION["phase"] = "confirm";
-//     $_SESSION["code"] = mt_rand(10000, 99999);
-//     $_SESSION["attempt"] = 3;
-//     return json_encode(["status" => "success", "code" => $_SESSION["code"]]);
-// }
+    $_SESSION["phase"] = "confirm";
+    $_SESSION["code"] = mt_rand(100000, 999999);
+    $_SESSION["attempt"] = 3;
+    return json_encode(["status" => "success", "code" => $_SESSION["code"]]);
+}
 
-// function create($code, $name, $phone, $address, $password)
-// {
-//     if (!isset($_SESSION["phase"]) || $_SESSION["phase"] != "confirm")
-//         return json_encode(["status" => "timeout"]);
+function create($code, $password)
+{
+    if (!isset($_SESSION["phase"]) || $_SESSION["phase"] != "confirm")
+        return json_encode(["status" => "timeout"]);
 
-//     if (--$_SESSION["attempt"] == 0) {
-//         session_destroy();
-//         return json_encode(["status" => "maximum_attempt"]);
-//     }
+    if (--$_SESSION["attempt"] == 0) {
+        session_destroy();
+        return json_encode(["status" => "maximum_attempt"]);
+    }
 
-//     if ($code != $_SESSION["code"])
-//         return json_encode(["status" => "code_invalid"]);
+    if ($code != $_SESSION["code"])
+        return json_encode(["status" => "code_invalid"]);
 
-//     send_mail_text($_SESSION["email"], "Üyelik", "Fit4U’ya hoş geldiniz. Aramıza katıldığınız için çok mutluyuz. Artık rahatça size en uygun menüyü seçip siparişinizi verebilirsiniz. Aklınıza takılan tüm sorular için site üzerindeki butondan diyetisyenlerimize ulaşabilirsiniz. Dilerseniz instagram üzerinden bizi takip ederek yeni menüler, çeşitli indirimler ve etkinliklerden haberdar olabilirsiniz. @fitgelsin Sağlıklı günler…", $name);
-//     session_destroy();
-//     register_user($name, $phone, $address, $password);
+    send_mail_text($_SESSION["email"], "REGISTRATION", "REGISTRATION_COMPLETE: TRUE");
+    register_user($password);
+    session_destroy();
 
-//     return json_encode(["status" => "success"]);
-// }
+    return json_encode(["status" => "success"]);
+}
