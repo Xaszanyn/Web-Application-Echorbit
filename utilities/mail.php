@@ -1,14 +1,15 @@
 <?php
 
-function send_mail_text($target, $subject, $message, $name = "")
+function send_mail($target, $subject, $mail)
 {
-    // $message = ($name ? "Merhaba " . $name . ", " : $name) . $message;
+    mail($target, $subject, $mail, [
+        "From" => "Echorbit <no-reply@echorbit.com>",
+        "MIME-Version" => "1.0",
+        "Content-Type" => "text/html; charset=UTF-8"
+    ]);
+}
 
-    mail($target, $subject, $message);
-
-    // mail($target, $subject, $message, [
-    //     "From" => "Fit Gelsin <no-reply@fitgelsin.com>",
-    //     "MIME-Version" => "1.0",
-    //     "Content-Type" => "text/html; charset=iso-8859-1"
-    // ]);
+function send_mail_text($target, $subject, $message)
+{
+    send_mail($target, $subject, $message);
 }
