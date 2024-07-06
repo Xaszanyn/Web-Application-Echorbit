@@ -58,51 +58,63 @@ function login_user($email, $password)
     mysqli_stmt_fetch($result);
     mysqli_stmt_close($result);
 
-    // $orders = ["individual" => [], "company" => []];
-
-    // $query = "SELECT menu_id, date, province_id, district_id, days, time, address FROM orders, order_requests WHERE request_id = order_requests.id AND email = ?";
-    // $result = mysqli_prepare($connection, $query);
-    // mysqli_stmt_bind_param($result, "s", $email);
-    // mysqli_stmt_execute($result);
-    // mysqli_stmt_bind_result($result, $menu_id, $date, $province_id, $district_id, $days, $time, $order_address);
-    // while (mysqli_stmt_fetch($result)) {
-    //     $orders["individual"][] = array(
-    //         'menu_id' => $menu_id,
-    //         'date' => $date,
-    //         'province_id' => $province_id,
-    //         'district_id' => $district_id,
-    //         'days' => $days,
-    //         'time' => $time,
-    //         'address' => $order_address
-    //     );
-    // }
-    // mysqli_stmt_close($result);
-
-    // $query = "SELECT menu_id, date, province_id, district_id, days, time, address, allergy, disease, extra, company_name FROM company_orders, company_order_requests WHERE SUBSTRING(request_id, 2) = company_order_requests.id AND email = ?";
-    // $result = mysqli_prepare($connection, $query);
-    // mysqli_stmt_bind_param($result, "s", $email);
-    // mysqli_stmt_execute($result);
-    // mysqli_stmt_bind_result($result, $menu_id, $date, $province_id, $district_id, $days, $time, $order_address, $allergy, $disease, $extra, $company_name);
-    // while (mysqli_stmt_fetch($result)) {
-    //     $orders["company"][] = array(
-    //         'menu_id' => $menu_id,
-    //         'date' => $date,
-    //         'province_id' => $province_id,
-    //         'district_id' => $district_id,
-    //         'days' => $days,
-    //         'time' => $time,
-    //         'address' => $order_address,
-    //         'allergy' => $allergy,
-    //         'disease' => $disease,
-    //         'extra' => $extra,
-    //         'company_name' => $company_name,
-    //     );
-    // }
-    // mysqli_stmt_close($result);
-
     mysqli_close($connection);
 
     if (!empty($id)) {
         return ["id" => $id, "email" => $email];
     }
+}
+
+function get_musics()
+{
+    $connection = connect();
+
+    $query = "SELECT id, name, picture, sample, standart_price, premium_price FROM musics";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $id, $name, $picture, $sample, $standart_price, $premium_price);
+
+    while (mysqli_stmt_fetch($result)) {
+        $musics[] = array(
+            'id' => $id,
+            'name' => $name,
+            'picture' => $picture,
+            'sample' => $sample,
+            'standart_price' => $standart_price,
+            'premium_price' => $premium_price
+        );
+    }
+
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    return $musics;
+}
+
+function get_sfxs()
+{
+    $connection = connect();
+
+    $query = "SELECT id, name, picture, sample, standart_price, premium_price FROM sfxs";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $id, $name, $picture, $sample, $standart_price, $premium_price);
+
+    while (mysqli_stmt_fetch($result)) {
+        $sfxs[] = array(
+            'id' => $id,
+            'name' => $name,
+            'picture' => $picture,
+            'sample' => $sample,
+            'standart_price' => $standart_price,
+            'premium_price' => $premium_price
+        );
+    }
+
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    return $sfxs;
 }
