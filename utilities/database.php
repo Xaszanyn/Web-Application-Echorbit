@@ -69,19 +69,24 @@ function get_musics()
 {
     $connection = connect();
 
-    $query = "SELECT id, name, picture, sample, standart_price, premium_price FROM musics";
+    $query = "SELECT id, name, image, audio, album price, premium_price, amazon, date, category, favorite FROM musics";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $id, $name, $picture, $sample, $standart_price, $premium_price);
+    mysqli_stmt_bind_result($result, $id, $name, $image, $audio, $album, $price, $premium_price, $amazon, $date, $category, $favorite);
 
     while (mysqli_stmt_fetch($result)) {
         $musics[] = array(
             'id' => $id,
             'name' => $name,
-            'picture' => $picture,
-            'sample' => $sample,
-            'standart_price' => $standart_price,
-            'premium_price' => $premium_price
+            'image' => $image,
+            'audio' => $audio,
+            'album' => $album,
+            'price' => $price,
+            'premium_price' => $premium_price,
+            'amazon' => $amazon,
+            'date' => $date,
+            'category' => $category,
+            'favorite' => $favorite
         );
     }
 
@@ -96,19 +101,24 @@ function get_sfxs()
 {
     $connection = connect();
 
-    $query = "SELECT id, name, picture, sample, standart_price, premium_price FROM sfxs";
+    $query = "SELECT id, name, image, audio, album price, premium_price, amazon, date, category, favorite FROM sfxs";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $id, $name, $picture, $sample, $standart_price, $premium_price);
+    mysqli_stmt_bind_result($result, $id, $name, $image, $audio, $album, $price, $premium_price, $amazon, $date, $category, $favorite);
 
     while (mysqli_stmt_fetch($result)) {
         $sfxs[] = array(
             'id' => $id,
             'name' => $name,
-            'picture' => $picture,
-            'sample' => $sample,
-            'standart_price' => $standart_price,
-            'premium_price' => $premium_price
+            'image' => $image,
+            'audio' => $audio,
+            'album' => $album,
+            'price' => $price,
+            'premium_price' => $premium_price,
+            'amazon' => $amazon,
+            'date' => $date,
+            'category' => $category,
+            'favorite' => $favorite
         );
     }
 
@@ -117,4 +127,52 @@ function get_sfxs()
     mysqli_close($connection);
 
     return $sfxs;
+}
+
+function get_music_categories()
+{
+    $connection = connect();
+
+    $query = "SELECT id, name, icon FROM music_categories";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $id, $name, $icon);
+
+    while (mysqli_stmt_fetch($result)) {
+        $music_categories[] = array(
+            'id' => $id,
+            'name' => $name,
+            'icon' => $icon,
+        );
+    }
+
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    return $music_categories;
+}
+
+function get_sfx_categories()
+{
+    $connection = connect();
+
+    $query = "SELECT id, name, icon FROM sfx_categories";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $id, $name, $icon);
+
+    while (mysqli_stmt_fetch($result)) {
+        $sfx_categories[] = array(
+            'id' => $id,
+            'name' => $name,
+            'icon' => $icon,
+        );
+    }
+
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    return $sfx_categories;
 }
