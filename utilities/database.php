@@ -69,7 +69,7 @@ function get_musics()
 {
     $connection = connect();
 
-    $query = "SELECT id, name, image, audio, album price, premium_price, amazon, date, category, favorite FROM musics";
+    $query = "SELECT id, name, image, audio, album, price, premium_price, amazon, date, category, favorite FROM musics";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
     mysqli_stmt_bind_result($result, $id, $name, $image, $audio, $album, $price, $premium_price, $amazon, $date, $category, $favorite);
@@ -101,7 +101,7 @@ function get_sfxs()
 {
     $connection = connect();
 
-    $query = "SELECT id, name, image, audio, album price, premium_price, amazon, date, category, favorite FROM sfxs";
+    $query = "SELECT id, name, image, audio, album, price, premium_price, amazon, date, category, favorite FROM sfxs";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
     mysqli_stmt_bind_result($result, $id, $name, $image, $audio, $album, $price, $premium_price, $amazon, $date, $category, $favorite);
