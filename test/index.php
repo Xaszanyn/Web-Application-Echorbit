@@ -23,9 +23,11 @@ if ($_GET["request"]) {
             "Bucket" => "echorbit-audio",
             "Key" => $key
         ]), new DateTime("+1 day"))->getUri();
-        echo json_encode(["status" => "success", "url" => $url]);
+
+        header("Location: " . $url);
+        exit;
     } catch (AwsException $error) {
-        echo json_encode(["status" => "error"]);
+        echo json_encode(["error" => $error]);
     }
 }
 
