@@ -46,12 +46,14 @@ if ($_GET["request"]) {
     <h1>Amazon Test Download</h1>
     <hr>
     <p>Click to download file.</p>
-    <form method="get" action="https://echorbitaudio.com/services/test/index.php?request=file">
+    <form method="get" action="https://echorbitaudio.com/services/test/index.php">
+        <input type="hidden" name="request" value="file">
         <button type="submit">Download</button>
     </form>
     <hr>
     <p>Click to download image file.</p>
-    <form method="get" action="https://echorbitaudio.com/services/test/index.php?request=image">
+    <form method="get" action="https://echorbitaudio.com/services/test/index.php">
+        <input type="hidden" name="request" value="image">
         <button type="submit">Download</button>
     </form>
 </body>
