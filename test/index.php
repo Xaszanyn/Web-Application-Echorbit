@@ -15,7 +15,7 @@ try {
                     'product_data' => [
                         'name' => 'Echorbit Audio Product Name',
                         'description' => 'Echorbit Audio product description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-                        'images' => ['https://picsum.photos/512', 'https://picsum.photos/1024/512', 'https://picsum.photos/1024/2048']
+                        'images' => ['https://picsum.photos/1024']
                     ],
                     'unit_amount' => 450,  // Amount in cents ($4.50)
                 ],
