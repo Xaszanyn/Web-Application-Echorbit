@@ -21,7 +21,7 @@ try {
             ]
         ],
         'mode' => 'payment',
-        'success_url' => 'https://fitgelsin.com',
+        'success_url' => 'https://echorbitaudio.com',
         'cancel_url' => 'https://ekin.codes',
     ]);
 
