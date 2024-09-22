@@ -19,7 +19,7 @@ if ($_GET["request"]) {
                             'description' => 'Echorbit Audio product description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
                             'images' => ['https://picsum.photos/1024']
                         ],
-                        'unit_amount' => 450,  // Amount in cents ($4.50)
+                        'unit_amount' => 10000,  // Amount in cents ($100.00)
                     ],
                     'quantity' => 1,
                 ]
