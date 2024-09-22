@@ -1,7 +1,7 @@
 <?php
 
 require "../stripe/init.php";
-require "../utilities/config.php";
+require "../utilities/configuration.php";
 
 \Stripe\Stripe::setApiKey(STRIPE_SECRET);
 
