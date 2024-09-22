@@ -53,7 +53,7 @@ if ($_GET["request"]) {
     <p>Click to make payment.</p>
     <form method="get" action="https://echorbitaudio.com/services/test/index.php">
         <input type="hidden" name="request" value="payment">
-        <button type="submit">$4.5 Checkout</button>
+        <button type="submit">$22.50 Checkout</button>
     </form>
     <hr>
 </body>
