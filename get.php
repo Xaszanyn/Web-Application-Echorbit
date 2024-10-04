@@ -3,11 +3,8 @@
 require "./utilities/database.php";
 
 switch ($_GET["target"]) {
-    case "musics":
-        echo json_encode(get_musics());
-        break;
-    case "sfxs":
-        echo json_encode(get_sfxs());
+    case "products":
+        echo json_encode(get_products());
         break;
     case "music_categories":
         echo json_encode(get_music_categories());

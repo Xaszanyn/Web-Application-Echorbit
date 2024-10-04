@@ -65,28 +65,29 @@ function login_user($email, $password)
     }
 }
 
-function get_musics()
+function get_products()
 {
     $connection = connect();
 
-    $query = "SELECT id, name, image, audio, album, price, premium_price, amazon, date, category, favorite FROM musics";
+    $query = "SELECT id, type, name, category, image, price, premium_price, favorite, date, soundcloud, content FROM products";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $id, $name, $image, $audio, $album, $price, $premium_price, $amazon, $date, $category, $favorite);
+    mysqli_stmt_bind_result($result, $id, $type, $name, $category, $image, $price, $premium_price, $favorite, $date, $soundcloud, $content);
 
     while (mysqli_stmt_fetch($result)) {
-        $musics[] = array(
-            'id' => $id,
+        $products[] = array(
+
+            'id' =>  $id,
+            'type' => $type,
             'name' => $name,
-            'image' => $image,
-            'audio' => $audio,
-            'album' => $album,
-            'price' => $price,
-            'premium_price' => $premium_price,
-            'amazon' => $amazon,
-            'date' => $date,
-            'category' => $category,
-            'favorite' => $favorite
+            'category'   => $category,
+            'image'    =>  $image,
+            'price'    =>  $price,
+            'premium_price'  =>  $premium_price,
+            'favorite'   =>   $favorite,
+            'date'   =>    $date,
+            'soundcloud'  =>   $soundcloud,
+            'content'      =>    $content
         );
     }
 
@@ -94,39 +95,7 @@ function get_musics()
 
     mysqli_close($connection);
 
-    return $musics;
-}
-
-function get_sfxs()
-{
-    $connection = connect();
-
-    $query = "SELECT id, name, image, audio, album, price, premium_price, amazon, date, category, favorite FROM sfxs";
-    $result = mysqli_prepare($connection, $query);
-    mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $id, $name, $image, $audio, $album, $price, $premium_price, $amazon, $date, $category, $favorite);
-
-    while (mysqli_stmt_fetch($result)) {
-        $sfxs[] = array(
-            'id' => $id,
-            'name' => $name,
-            'image' => $image,
-            'audio' => $audio,
-            'album' => $album,
-            'price' => $price,
-            'premium_price' => $premium_price,
-            'amazon' => $amazon,
-            'date' => $date,
-            'category' => $category,
-            'favorite' => $favorite
-        );
-    }
-
-    mysqli_stmt_close($result);
-
-    mysqli_close($connection);
-
-    return $sfxs;
+    return $products;
 }
 
 function get_music_categories()

@@ -30,7 +30,6 @@ if ($_GET["request"]) {
         ]);
 
         header("Location: " . $session->url);
-
     } catch (\Stripe\Exception\ApiErrorException $error) {
         echo $error->getMessage();
     }
