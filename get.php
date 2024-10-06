@@ -6,10 +6,7 @@ switch ($_GET["target"]) {
     case "products":
         echo json_encode(get_products());
         break;
-    case "music_categories":
-        echo json_encode(get_music_categories());
-        break;
-    case "sfx_categories":
-        echo json_encode(get_sfx_categories());
+    case "categories":
+        echo json_encode(get_categories());
         break;
 }

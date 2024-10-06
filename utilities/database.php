@@ -99,20 +99,21 @@ function get_products()
     return $products;
 }
 
-function get_music_categories()
+function get_categories()
 {
     $connection = connect();
 
-    $query = "SELECT id, name, icon FROM music_categories";
+    $query = "SELECT id, type, name, image FROM categories";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $id, $name, $icon);
+    mysqli_stmt_bind_result($result, $id, $type, $name, $image);
 
     while (mysqli_stmt_fetch($result)) {
-        $music_categories[] = array(
+        $categories[] = array(
             'id' => $id,
+            'type' => $type,
             'name' => $name,
-            'icon' => $icon,
+            'image' => $image,
         );
     }
 
@@ -120,29 +121,5 @@ function get_music_categories()
 
     mysqli_close($connection);
 
-    return $music_categories;
-}
-
-function get_sfx_categories()
-{
-    $connection = connect();
-
-    $query = "SELECT id, name, icon FROM sfx_categories";
-    $result = mysqli_prepare($connection, $query);
-    mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $id, $name, $icon);
-
-    while (mysqli_stmt_fetch($result)) {
-        $sfx_categories[] = array(
-            'id' => $id,
-            'name' => $name,
-            'icon' => $icon,
-        );
-    }
-
-    mysqli_stmt_close($result);
-
-    mysqli_close($connection);
-
-    return $sfx_categories;
+    return $categories;
 }
