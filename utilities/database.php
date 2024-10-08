@@ -209,7 +209,10 @@ function user_unfavorite($session, $id)
 
     $favorites = json_decode($favorites);
     $index = array_search($id, $favorites);
-    if ($index != false) unset($favorites[$index]);
+    if ($index != false) {
+        unset($favorites[$index]);
+        $favorites = array_values($favorites);
+    }
     $favorites = json_encode($favorites);
 
     $connection = connect();
