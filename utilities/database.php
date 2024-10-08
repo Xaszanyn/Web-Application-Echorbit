@@ -180,7 +180,7 @@ function user_favorite($session, $id)
 
     $connection = connect();
 
-    $query = "UPDATE sessions SET favorites = ? WHERE id = ?";
+    $query = "UPDATE users SET favorites = ? WHERE id = ?";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_bind_param($result, "ss", $favorites, $user);
     mysqli_stmt_execute($result);
