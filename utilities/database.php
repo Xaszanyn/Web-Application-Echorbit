@@ -60,7 +60,7 @@ function login_user($email, $password)
 
     mysqli_close($connection);
 
-    if (!empty($id)) return ["status" => "success", "id" => $id, "email" => $email, "session" => create_session($id)];
+    if (!empty($id)) return ["status" => "success", "session" => create_session($id)];
     else return ["status" => "user_invalid"];
 }
 
@@ -85,17 +85,17 @@ function login_user_session($session)
 {
     $connection = connect();
 
-    $query = "SELECT users.id, email FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
+    $query = "SELECT email, cart, favorites FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_bind_param($result, "s", $session);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $id, $email);
+    mysqli_stmt_bind_result($result, $email, $cart, $favorites);
     mysqli_stmt_fetch($result);
     mysqli_stmt_close($result);
 
     mysqli_close($connection);
 
-    if (!empty($id)) return ["status" => "success", "id" => $id, "email" => $email];
+    if (!empty($id)) return ["status" => "success", "email" => $email, "cart" => $cart, "favorites" => $favorites];
     else return ["status" => "user_invalid"];
 }
 
