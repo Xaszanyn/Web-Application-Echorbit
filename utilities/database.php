@@ -60,7 +60,8 @@ function login_user($email, $password)
 
     mysqli_close($connection);
 
-    if (!empty($id)) return ["id" => $id, "email" => $email, "session" => create_session($id)];
+    if (!empty($id)) return ["status" => "success", "id" => $id, "email" => $email, "session" => create_session($id)];
+    else return ["status" => "user_invalid"];
 }
 
 function create_session($id)
@@ -94,7 +95,8 @@ function login_user_session($session)
 
     mysqli_close($connection);
 
-    if (!empty($id)) return ["id" => $id, "email" => $email];
+    if (!empty($id)) return ["status" => "success", "id" => $id, "email" => $email];
+    else return ["status" => "user_invalid"];
 }
 
 function get_products()

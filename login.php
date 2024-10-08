@@ -5,10 +5,7 @@ require "./utilities/database.php";
 
 $login = post();
 
-$information = login_user($login["email"], $login["password"]);
+if (isset($login["email"])) $user = login_user($login["email"], $login["password"]);
+else $user = login_user_session($login["session"]);
 
-if (empty($information["email"])) {
-    echo json_encode(["status" => "user_invalid"]);
-} else {
-    echo json_encode(["information" => $information, "status" => "success"]);
-}
+echo json_encode($user);
