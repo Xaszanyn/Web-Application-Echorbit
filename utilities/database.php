@@ -35,7 +35,7 @@ function register_user($password)
 {
     $connection = connect();
 
-    $query = "INSERT INTO users(email, salt, hash) VALUES (?, ?, ?)";
+    $query = "INSERT INTO users(email, salt, hash, cart, favorites) VALUES (?, ?, ?, '[]', '[]')";
     $result = mysqli_prepare($connection, $query);
     $salt = bin2hex(random_bytes(16));
     $hash = md5($password . $salt);
