@@ -87,7 +87,7 @@ function login_user_session($session)
 
     echo $session;
 
-    $query = "SELECT users.id, email FROM users, sessions WHERE session = ? AND date < DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
+    $query = "SELECT users.id, email FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_bind_param($result, "s", $session);
     mysqli_stmt_execute($result);
