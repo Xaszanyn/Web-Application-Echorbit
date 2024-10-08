@@ -60,9 +60,24 @@ function login_user($email, $password)
 
     mysqli_close($connection);
 
-    if (!empty($id)) {
-        return ["id" => $id, "email" => $email];
-    }
+    if (!empty($id)) return ["id" => $id, "email" => $email, "session" => create_session($id)];
+}
+
+function create_session($id)
+{
+    $connection = connect();
+
+    $query = "INSERT INTO sessions(id, date, token) VALUES (?, ?, ?)";
+    $result = mysqli_prepare($connection, $query);
+    $token = bin2hex(random_bytes(32));
+    $date = date("Y-m-d");
+    mysqli_stmt_bind_param($result, "sss", $id, $date, $token);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    return $token;
 }
 
 function get_products()
