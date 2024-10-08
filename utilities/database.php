@@ -68,7 +68,7 @@ function create_session($id)
 {
     $connection = connect();
 
-    $query = "INSERT INTO sessions(id, date, session) VALUES (?, ?, ?)";
+    $query = "INSERT INTO sessions(user, date, session) VALUES (?, ?, ?)";
     $result = mysqli_prepare($connection, $query);
     $session = bin2hex(random_bytes(32));
     $date = date("Y-m-d");

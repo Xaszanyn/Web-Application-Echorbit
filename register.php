@@ -70,7 +70,7 @@ function create($code, $password)
 
     send_mail_text($_SESSION["email"], "REGISTRATION", "REGISTRATION_COMPLETE: TRUE");
     register_user($password);
-    $_SESSION = [];
+    session_destroy();
 
     return json_encode(["status" => "success"]);
 }
