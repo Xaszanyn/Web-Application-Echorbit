@@ -67,17 +67,34 @@ function create_session($id)
 {
     $connection = connect();
 
-    $query = "INSERT INTO sessions(id, date, token) VALUES (?, ?, ?)";
+    $query = "INSERT INTO sessions(id, date, session) VALUES (?, ?, ?)";
     $result = mysqli_prepare($connection, $query);
-    $token = bin2hex(random_bytes(32));
+    $session = bin2hex(random_bytes(32));
     $date = date("Y-m-d");
-    mysqli_stmt_bind_param($result, "sss", $id, $date, $token);
+    mysqli_stmt_bind_param($result, "sss", $id, $date, $session);
     mysqli_stmt_execute($result);
     mysqli_stmt_close($result);
 
     mysqli_close($connection);
 
-    return $token;
+    return $session;
+}
+
+function login_user_session($session)
+{
+    $connection = connect();
+
+    $query = "SELECT users.id, email FROM users, sessions WHERE session = ? AND date < DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $session);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $id, $email);
+    mysqli_stmt_fetch($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    if (!empty($id)) return ["id" => $id, "email" => $email];
 }
 
 function get_products()
