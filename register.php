@@ -22,9 +22,6 @@ switch ($registry["phase"]) {
 
 function register($email)
 {
-    if (isset($_SESSION["phase"]))
-        session_destroy();
-
     if (!filter_var($email, FILTER_VALIDATE_EMAIL))
         return json_encode(["status" => "email_invalid"]);
 
