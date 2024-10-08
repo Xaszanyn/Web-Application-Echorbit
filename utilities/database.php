@@ -95,7 +95,7 @@ function login_user_session($session)
 
     mysqli_close($connection);
 
-    if (!empty($id)) return ["status" => "success", "email" => $email, "cart" => $cart, "favorites" => $favorites];
+    if (!empty($email)) return ["status" => "success", "email" => $email, "cart" => $cart, "favorites" => $favorites];
     else return ["status" => "user_invalid"];
 }
 
