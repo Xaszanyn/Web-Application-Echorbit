@@ -157,3 +157,38 @@ function get_categories()
 
     return $categories;
 }
+
+function user_favorite($session, $id)
+{
+    $connection = connect();
+
+    $query = "SELECT user, favorites FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $session);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $user, $favorites);
+    mysqli_stmt_fetch($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    if (empty($favorites)) return ["status" => "error"];
+
+    $favorites = json_decode($favorites);
+    if (!in_array($id, $favorites)) $favorites[] = $id;
+    $favorites = json_encode($favorites);
+
+    $connection = connect();
+
+    $query = "UPDATE sessions SET favorites = ? WHERE id = ?";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "ss", $favorites, $user);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    return ["status" => "success"];
+}
+
+function user_unfavorite($session, $id) {}
