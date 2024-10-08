@@ -42,7 +42,7 @@ function confirm($code)
         return json_encode(["status" => "timeout"]);
 
     if (--$_SESSION["attempt"] < 0) {
-        session_destroy();
+        $_SESSION = [];
         return json_encode(["status" => "maximum_attempt"]);
     }
 
@@ -61,7 +61,7 @@ function create($code, $password)
         return json_encode(["status" => "timeout"]);
 
     if (--$_SESSION["attempt"] == 0) {
-        session_destroy();
+        $_SESSION = [];
         return json_encode(["status" => "maximum_attempt"]);
     }
 
@@ -70,7 +70,7 @@ function create($code, $password)
 
     send_mail_text($_SESSION["email"], "REGISTRATION", "REGISTRATION_COMPLETE: TRUE");
     register_user($password);
-    session_destroy();
+    $_SESSION = [];
 
     return json_encode(["status" => "success"]);
 }
