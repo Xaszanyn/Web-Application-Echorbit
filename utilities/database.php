@@ -227,3 +227,73 @@ function user_unfavorite($session, $id)
 
     return ["status" => "success"];
 }
+
+function user_cart($session, $id)
+{
+    $connection = connect();
+
+    $query = "SELECT user, cart FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $session);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $user, $cart);
+    mysqli_stmt_fetch($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    if (empty($cart)) return ["status" => "error"];
+
+    $cart = json_decode($cart);
+    if (!in_array($id, $cart)) $cart[] = $id;
+    $cart = json_encode($cart);
+
+    $connection = connect();
+
+    $query = "UPDATE users SET cart = ? WHERE id = ?";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "ss", $cart, $user);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    return ["status" => "success"];
+}
+
+function user_uncart($session, $id)
+{
+    $connection = connect();
+
+    $query = "SELECT user, cart FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $session);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $user, $cart);
+    mysqli_stmt_fetch($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    if (empty($cart)) return ["status" => "error"];
+
+    $cart = json_decode($cart);
+    $index = array_search($id, $cart);
+    if ($index != false) {
+        unset($cart[$index]);
+        $cart = array_values($cart);
+    }
+    $cart = json_encode($cart);
+
+    $connection = connect();
+
+    $query = "UPDATE users SET cart = ? WHERE id = ?";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "ss", $cart, $user);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    return ["status" => "success"];
+}
