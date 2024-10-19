@@ -103,21 +103,19 @@ function get_products()
 {
     $connection = connect();
 
-    $query = "SELECT id, type, name, category, image, price, premium_price, favorite, date, soundcloud, content, feature FROM products";
+    $query = "SELECT id, type, name, category, image, price, favorite, date, soundcloud, content, feature FROM products";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $id, $type, $name, $category, $image, $price, $premium_price, $favorite, $date, $soundcloud, $content, $feature);
+    mysqli_stmt_bind_result($result, $id, $type, $name, $category, $image, $price, $favorite, $date, $soundcloud, $content, $feature);
 
     while (mysqli_stmt_fetch($result)) {
         $products[] = array(
-
             'id' => $id,
             'type' => $type,
             'name' => $name,
             'category' => $category,
             'image' => $image,
             'price' => $price,
-            'premium_price' => $premium_price,
             'favorite' => $favorite,
             'date' => $date,
             'soundcloud' => $soundcloud,
