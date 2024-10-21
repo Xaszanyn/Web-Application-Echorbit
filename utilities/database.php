@@ -156,6 +156,30 @@ function get_categories()
     return $categories;
 }
 
+function get_featured_showcase()
+{
+    $connection = connect();
+
+    $query = "SELECT id, name, image FROM products WHERE id IN (2, 4, 5, 1)";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $id, $name, $image);
+
+    while (mysqli_stmt_fetch($result)) {
+        $products[] = array(
+            'id' => $id,
+            'name' => $name,
+            'image' => $image,
+        );
+    }
+
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    return $products;
+}
+
 function user_favorite($session, $id)
 {
     $connection = connect();
