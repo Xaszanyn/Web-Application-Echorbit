@@ -160,7 +160,7 @@ function get_featured_showcase()
 {
     $connection = connect();
 
-    $query = "SELECT id, name, image FROM products WHERE id IN (2, 4, 5, 1)";
+    $query = "SELECT id, name, image FROM products WHERE id IN (1, 2, 4, 5)";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
     mysqli_stmt_bind_result($result, $id, $name, $image);
