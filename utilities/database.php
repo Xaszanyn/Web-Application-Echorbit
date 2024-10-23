@@ -236,6 +236,17 @@ function user_favorite($session, $id)
 
     mysqli_close($connection);
 
+    $connection = connect();
+
+    $query = "UPDATE products SET favorite = favorite + 1 WHERE id = ?";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $id);
+    mysqli_stmt_execute($result);
+
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
     return ["status" => "success"];
 }
 
@@ -269,6 +280,17 @@ function user_unfavorite($session, $id)
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_bind_param($result, "ss", $favorites, $user);
     mysqli_stmt_execute($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    $connection = connect();
+
+    $query = "UPDATE products SET favorite = favorite - 1 WHERE id = ?";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $id);
+    mysqli_stmt_execute($result);
+
     mysqli_stmt_close($result);
 
     mysqli_close($connection);
