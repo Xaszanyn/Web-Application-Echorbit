@@ -13,11 +13,13 @@ if ($_GET["request"]) {
             'line_items' => [
                 [
                     [
-                        'price' => 'prod_R5IPvPyMN8obUb',
+                        // 'price' => 'prod_R5IPvPyMN8obUb',
+                        'price' => 'price_1QD7oBJE9sJi5zETgvBssgCF',
                         'quantity' => 1,
                     ],
                     [
-                        'price' => 'prod_R5IOz3TFrtdOjZ',
+                        // 'price' => 'prod_R5IOz3TFrtdOjZ',
+                        'price' => 'price_1QD7opJE9sJi5zETURaAENuH',
                         'quantity' => 1,
                     ],
                     // 'price_data' => [
