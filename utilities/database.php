@@ -172,14 +172,26 @@ function get_categories()
 
 function get_featured_showcase()
 {
+    \Stripe\Stripe::setApiKey(STRIPE_SECRET);
+
+    $data = (\Stripe\Product::all())->data;
+
     $connection = connect();
 
-    $query = "SELECT id, name, image FROM products WHERE id IN (1, 2, 4, 5)";
+    $query = "SELECT id, stripe, image FROM products WHERE id IN (1, 2, 4, 5)";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $id, $name, $image);
+    mysqli_stmt_bind_result($result, $id, $stripe, $image);
 
     while (mysqli_stmt_fetch($result)) {
+        for ($index = 0; $index < count($data); $index++) {
+            $product = $data[$index];
+            if ($stripe == $product->id) {
+                $name = $product->name;
+                break;
+            }
+        }
+
         $products[] = array(
             'id' => $id,
             'name' => $name,
