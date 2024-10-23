@@ -1,6 +1,9 @@
 <?php
 
+require "./stripe/init.php";
 require "configuration.php";
+
+\Stripe\Stripe::setApiKey('your_secret_key');
 
 function connect()
 {
@@ -101,6 +104,10 @@ function login_user_session($session)
 
 function get_products()
 {
+    $products = \Stripe\Product::all();
+
+    file_put_contents('PRODUCTS.txt', print_r($products, true));
+
     $connection = connect();
 
     $query = "SELECT id, type, name, category, image, price, favorite, date, soundcloud, content, feature FROM products";
