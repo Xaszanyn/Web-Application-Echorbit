@@ -12,16 +12,24 @@ if ($_GET["request"]) {
             'payment_method_types' => ['card'],
             'line_items' => [
                 [
-                    'price_data' => [
-                        'currency' => 'usd',
-                        'product_data' => [
-                            'name' => 'Echorbit Audio Product Name',
-                            'description' => 'Echorbit Audio product description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                            'images' => ['https://picsum.photos/1024']
-                        ],
-                        'unit_amount' => 2250,  // Amount in cents ($22.50)
+                    [
+                        'price' => 'prod_R5IPvPyMN8obUb',
+                        'quantity' => 1,
                     ],
-                    'quantity' => 1,
+                    [
+                        'price' => 'prod_R5IOz3TFrtdOjZ',
+                        'quantity' => 1,
+                    ],
+                    // 'price_data' => [
+                    //     'currency' => 'usd',
+                    //     'product_data' => [
+                    //         'name' => 'Echorbit Audio Product Name',
+                    //         'description' => 'Echorbit Audio product description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                    //         'images' => ['https://picsum.photos/1024']
+                    //     ],
+                    //     'unit_amount' => 2250,  // Amount in cents ($22.50)
+                    // ],
+                    // 'quantity' => 1,
                 ]
             ],
             'mode' => 'payment',
@@ -29,7 +37,9 @@ if ($_GET["request"]) {
             'cancel_url' => 'https://ekin.codes',
         ]);
 
-        header("Location: " . $session->url);
+        echo json_encode($session);
+
+        // header("Location: " . $session->url);
     } catch (\Stripe\Exception\ApiErrorException $error) {
         echo $error->getMessage();
     }
