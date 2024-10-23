@@ -3,8 +3,6 @@
 require "./stripe/init.php";
 require "configuration.php";
 
-\Stripe\Stripe::setApiKey('your_secret_key');
-
 function connect()
 {
     $connection = mysqli_connect(DATABASE_HOST, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE);
@@ -104,6 +102,8 @@ function login_user_session($session)
 
 function get_products()
 {
+    \Stripe\Stripe::setApiKey(STRIPE_SECRET);
+
     $products = \Stripe\Product::all();
 
     file_put_contents('PRODUCTS.txt', print_r($products, true));
