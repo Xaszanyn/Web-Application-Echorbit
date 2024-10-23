@@ -104,18 +104,25 @@ function get_products()
 {
     \Stripe\Stripe::setApiKey(STRIPE_SECRET);
 
-    $products = \Stripe\Product::all();
-
-    file_put_contents('PRODUCTS.txt', print_r($products, true));
+    $data = (\Stripe\Product::all())->data;
 
     $connection = connect();
 
-    $query = "SELECT id, type, name, category, image, price, favorite, date, soundcloud, content, feature FROM products";
+    $query = "SELECT id, type, stripe, category, image, favorite, date, soundcloud, content, feature FROM products";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $id, $type, $name, $category, $image, $price, $favorite, $date, $soundcloud, $content, $feature);
+    mysqli_stmt_bind_result($result, $id, $type, $stripe, $category, $image, $favorite, $date, $soundcloud, $content, $feature);
 
     while (mysqli_stmt_fetch($result)) {
+        for ($index = 0; $index < count($data); $index++) {
+            $product = $data[$index];
+            if ($stripe == $product->id) {
+                $name = $product->name;
+                $price = \Stripe\Price::retrieve($product->default_price);
+                break;
+            }
+        }
+
         $products[] = array(
             'id' => $id,
             'type' => $type,
