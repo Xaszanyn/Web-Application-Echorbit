@@ -118,7 +118,7 @@ function get_products()
             $product = $data[$index];
             if ($stripe == $product->id) {
                 $name = $product->name;
-                $price = \Stripe\Price::retrieve($product->default_price);
+                $price = (\Stripe\Price::retrieve($product->default_price))->unit_amount / 100;
                 break;
             }
         }
