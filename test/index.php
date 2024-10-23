@@ -37,6 +37,7 @@ if ($_GET["request"]) {
             'mode' => 'payment',
             'success_url' => 'https://echorbitaudio.com',
             'cancel_url' => 'https://ekin.codes',
+            'customer_creation' => 'always'
         ]);
 
         echo json_encode($session);
