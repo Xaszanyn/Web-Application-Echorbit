@@ -12,13 +12,16 @@ try {
         case 'checkout.session.completed':
             $session = $event['data']['object'];
 
-
             \Stripe\Invoice::create([
                 'customer' => $session['customer'],
-                'auto_advance' => true, // Automatically finalize the invoice
+                'auto_advance' => true,
             ]);
 
-            file_put_contents($file, $session_data, FILE_APPEND);
+            // $file = 'session_details.txt'; // Specify the filename
+            // $current_time = date('Y-m-d H:i:s');
+            // $session_data = "Time: $current_time\n" . print_r($session, true) . "\n\n";
+
+            // file_put_contents($file, $session_data, FILE_APPEND);
             break;
     }
 
