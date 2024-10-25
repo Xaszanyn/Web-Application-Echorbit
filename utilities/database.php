@@ -458,12 +458,12 @@ function create_order_request($session)
 
     $query = "INSERT INTO orders(user, cart, stripe, date) VALUES (?, ?, ?, NOW())";
     $result = mysqli_prepare($connection, $query);
-    $id = $stripe->id;
+    $id = $session->id;
     mysqli_stmt_bind_param($result, "sss", $user, $cart, $id);
     mysqli_stmt_execute($result);
     mysqli_stmt_close($result);
 
     mysqli_close($connection);
 
-    return ["status" => "success", "stripe" => $stripe->url];
+    return ["status" => "success", "stripe" => $session->url];
 }
