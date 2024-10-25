@@ -293,7 +293,7 @@ function user_unfavorite($session, $id)
 
     $favorites = json_decode($favorites);
     $index = array_search($id, $favorites);
-    if ($index != false) {
+    if (isset($index)) {
         unset($favorites[$index]);
         $favorites = array_values($favorites);
     }
@@ -374,7 +374,7 @@ function user_uncart($session, $id)
 
     $cart = json_decode($cart);
     $index = array_search($id, $cart);
-    if ($index != false) {
+    if (isset($index)) {
         unset($cart[$index]);
         $cart = array_values($cart);
     }
