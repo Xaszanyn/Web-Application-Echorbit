@@ -32,15 +32,26 @@ function register_email_control($email)
     return !$exists;
 }
 
-function register_user($password)
+function register_user($password, $guest)
 {
+    $cart = $favorites = [];
+
+    if ($guest != "-") {
+        $guest = json_decode($guest);
+        $cart = $guest["cart"];
+        $favorites = $guest["favorites"];
+    }
+
+    $cart = json_encode($cart);
+    $favorites = json_encode($favorites);
+
     $connection = connect();
 
-    $query = "INSERT INTO users(email, salt, hash, cart, favorites) VALUES (?, ?, ?, '[]', '[]')";
+    $query = "INSERT INTO users(email, salt, hash, cart, favorites) VALUES (?, ?, ?, ?, ?)";
     $result = mysqli_prepare($connection, $query);
     $salt = bin2hex(random_bytes(16));
     $hash = md5($password . $salt);
-    mysqli_stmt_bind_param($result, "sss", $_SESSION["email"], $salt, $hash);
+    mysqli_stmt_bind_param($result, "sss", $_SESSION["email"], $salt, $hash, $cart, $favorites);
     mysqli_stmt_execute($result);
     mysqli_stmt_close($result);
 

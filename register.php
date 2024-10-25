@@ -16,7 +16,7 @@ switch ($registry["phase"]) {
         echo confirm($registry["code"]);
         break;
     case "create":
-        echo create($registry["code"], $registry["password"]);
+        echo create($registry["code"], $registry["password"], $registry["guest"]);
         break;
 }
 
@@ -55,7 +55,7 @@ function confirm($code)
     return json_encode(["status" => "success", "code" => $_SESSION["code"]]);
 }
 
-function create($code, $password)
+function create($code, $password, $guest)
 {
     if (!isset($_SESSION["phase"]) || $_SESSION["phase"] != "confirm")
         return json_encode(["status" => "timeout"]);
@@ -69,7 +69,7 @@ function create($code, $password)
         return json_encode(["status" => "code_invalid"]);
 
     send_mail_text($_SESSION["email"], "REGISTRATION", "REGISTRATION_COMPLETE: TRUE");
-    register_user($password);
+    register_user($password, $guest);
     session_destroy();
 
     return json_encode(["status" => "success"]);
