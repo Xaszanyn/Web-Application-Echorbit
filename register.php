@@ -69,8 +69,8 @@ function create($code, $password, $guest)
         return json_encode(["status" => "code_invalid"]);
 
     send_mail_text($_SESSION["email"], "REGISTRATION", "REGISTRATION_COMPLETE: TRUE");
-    register_user($password, $guest);
+    $session = register_user($password, $guest);
     session_destroy();
 
-    return json_encode(["status" => "success"]);
+    return json_encode(["status" => "success", "session" => $session]);
 }

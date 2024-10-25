@@ -56,6 +56,20 @@ function register_user($password, $guest)
     mysqli_stmt_close($result);
 
     mysqli_close($connection);
+
+    $connection = connect();
+
+    $query = "SELECT id FROM users WHERE email = ?";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $_SESSION["email"]);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $id);
+    mysqli_stmt_fetch($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    return create_session($id);
 }
 
 function login_user($email, $password)
