@@ -51,7 +51,7 @@ function register_user($password, $guest)
     $result = mysqli_prepare($connection, $query);
     $salt = bin2hex(random_bytes(16));
     $hash = md5($password . $salt);
-    mysqli_stmt_bind_param($result, "sss", $_SESSION["email"], $salt, $hash, $cart, $favorites);
+    mysqli_stmt_bind_param($result, "sssss", $_SESSION["email"], $salt, $hash, $cart, $favorites);
     mysqli_stmt_execute($result);
     mysqli_stmt_close($result);
 
