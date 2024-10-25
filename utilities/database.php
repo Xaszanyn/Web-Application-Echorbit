@@ -38,8 +38,8 @@ function register_user($password, $guest)
 
     if ($guest != "-") {
         $guest = json_decode($guest);
-        $cart = $guest["cart"];
-        $favorites = $guest["favorites"];
+        $cart = $guest->cart;
+        $favorites = $guest->favorites;
     }
 
     $cart = json_encode($cart);
