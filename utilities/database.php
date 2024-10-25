@@ -392,3 +392,78 @@ function user_uncart($session, $id)
 
     return ["status" => "success"];
 }
+
+function create_order_request($session)
+{
+    $connection = connect();
+
+    $query = "SELECT user, cart FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $session);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $user, $cart);
+    mysqli_stmt_fetch($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    if (!isset($user) || $cart == "[]") return ["status" => "error"];
+
+    $cart = str_replace(['[', ']'], ['(', ')'], $cart);
+
+    \Stripe\Stripe::setApiKey(STRIPE_SECRET);
+
+    $data = (\Stripe\Product::all())->data;
+
+    $line_items = [];
+
+    $connection = connect();
+
+    $query = "SELECT stripe FROM products WHERE id IN $cart";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $stripe);
+
+    while (mysqli_stmt_fetch($result)) {
+        for ($index = 0; $index < count($data); $index++) {
+            $product = $data[$index];
+            if ($stripe == $product->id) {
+                $line_items[] = [
+                    'price' => $product->default_price,
+                    'quantity' => 1,
+                ];
+                break;
+            }
+        }
+    }
+
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    $session = \Stripe\Checkout\Session::create([
+        'payment_method_types' => ['card'],
+        'line_items' => $line_items,
+        'mode' => 'payment',
+        'success_url' => 'https://echorbitaudio.com/store?success',
+        'cancel_url' => 'https://echorbitaudio.com/store?error',
+        'customer_creation' => 'always'
+    ]);
+
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+    file_put_contents('STRIPE_SESSION.txt', print_r($session, true));
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+
+    $connection = connect();
+
+    $query = "INSERT INTO orders(user, cart, stripe, date) VALUES (?, ?, ?, NOW())";
+    $result = mysqli_prepare($connection, $query);
+    $id = $stripe->id;
+    mysqli_stmt_bind_param($result, "sss", $user, $cart, $id);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    return ["status" => "success", "stripe" => $stripe->url];
+}

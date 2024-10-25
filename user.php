@@ -18,6 +18,9 @@ switch ($user["action"]) {
     case "uncart":
         $user = user_uncart($user["session"], $user["id"]);
         break;
+    case "checkout":
+        $user = create_order_request($user["session"]);
+        break;
 }
 
 echo json_encode($user);
