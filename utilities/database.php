@@ -1,7 +1,7 @@
 <?php
 
-require_once "../stripe/init.php";
-require_once "configuration.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/services/stripe/init.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/services/utilities/configuration.php";
 
 function connect()
 {
