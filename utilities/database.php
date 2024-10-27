@@ -1,7 +1,7 @@
 <?php
 
-require "./stripe/init.php";
-require "configuration.php";
+require_once "../stripe/init.php";
+require_once "configuration.php";
 
 function connect()
 {
