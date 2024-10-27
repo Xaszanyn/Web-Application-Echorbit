@@ -409,7 +409,7 @@ function create_order_request($session)
 
     if (!isset($user) || $cart == "[]") return ["status" => "error"];
 
-    $cart = str_replace(['[', ']'], ['(', ')'], $cart);
+    $cart_query = str_replace(['[', ']'], ['(', ')'], $cart);
 
     \Stripe\Stripe::setApiKey(STRIPE_SECRET);
 
@@ -419,7 +419,7 @@ function create_order_request($session)
 
     $connection = connect();
 
-    $query = "SELECT stripe FROM products WHERE id IN $cart";
+    $query = "SELECT stripe FROM products WHERE id IN $cart_query";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
     mysqli_stmt_bind_result($result, $stripe);
@@ -450,10 +450,6 @@ function create_order_request($session)
         'customer_creation' => 'always'
     ]);
 
-    // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-    file_put_contents('STRIPE_SESSION.txt', print_r($session, true) . "\n____________________________________________________________________________________________________====================================================================================================\n", FILE_APPEND);
-    // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-
     $connection = connect();
 
     $query = "INSERT INTO orders(user, cart, stripe, date) VALUES (?, ?, ?, NOW())";
@@ -466,4 +462,17 @@ function create_order_request($session)
     mysqli_close($connection);
 
     return ["status" => "success", "stripe" => $session->url];
+}
+
+function complete_order($stripe)
+{
+    $connection = connect();
+
+    $query = "UPDATE orders SET complete = 1 WHERE stripe = ?";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $stripe);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
 }
