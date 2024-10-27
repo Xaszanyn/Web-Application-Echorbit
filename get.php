@@ -1,6 +1,6 @@
 <?php
 
-require_once "./utilities/database.php";
+require_once "utilities/database.php";
 
 switch ($_GET["target"]) {
     case "products":
