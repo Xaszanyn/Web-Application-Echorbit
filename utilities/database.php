@@ -499,7 +499,7 @@ function complete_order($stripe)
 
     $inventory = add_string_list($inventory, $cart);
 
-    $query = "UPDATE users SET inventory = ? WHERE id = ?";
+    $query = "UPDATE users SET cart = '[]', inventory = ? WHERE id = ?";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_bind_param($result, "ss", $inventory, $user);
     mysqli_stmt_execute($result);
