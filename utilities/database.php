@@ -142,17 +142,17 @@ function login_user_session($session)
 {
     $connection = connect();
 
-    $query = "SELECT email, cart, favorites FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
+    $query = "SELECT email, inventory, cart, favorites FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_bind_param($result, "s", $session);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $email, $cart, $favorites);
+    mysqli_stmt_bind_result($result, $email, $inventory, $cart, $favorites);
     mysqli_stmt_fetch($result);
     mysqli_stmt_close($result);
 
     mysqli_close($connection);
 
-    if (!empty($email)) return ["status" => "success", "email" => $email, "cart" => $cart, "favorites" => $favorites];
+    if (!empty($email)) return ["status" => "success", "email" => $email, "inventory" => $inventory, "cart" => $cart, "favorites" => $favorites];
     else return ["status" => "user_invalid"];
 }
 
