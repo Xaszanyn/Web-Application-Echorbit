@@ -26,6 +26,14 @@ function remove_string_list($list, $item)
     return json_encode(array_values($list));
 }
 
+function intersection_string_list($list, $items)
+{
+    $list = json_decode($list);
+    $items = json_decode($items);
+
+    return !empty(array_intersect($list, $items));
+}
+
 function connect()
 {
     $connection = mysqli_connect(DATABASE_HOST, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE);
@@ -404,17 +412,18 @@ function create_order_request($session)
 {
     $connection = connect();
 
-    $query = "SELECT user, cart FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
+    $query = "SELECT user, inventory, cart FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_bind_param($result, "s", $session);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $user, $cart);
+    mysqli_stmt_bind_result($result, $user, $inventory, $cart);
     mysqli_stmt_fetch($result);
     mysqli_stmt_close($result);
 
     mysqli_close($connection);
 
     if (!isset($user) || $cart == "[]") return ["status" => "error"];
+    if (intersection_string_list($inventory, $cart)) return ["status" => "intersection"];
 
     $cart_query = str_replace(['[', ']'], ['(', ')'], $cart);
 
