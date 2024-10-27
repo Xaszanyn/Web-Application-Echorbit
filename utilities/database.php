@@ -3,6 +3,29 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/services/stripe/init.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/services/utilities/configuration.php";
 
+function add_string_list($list, $item)
+{
+    $list = json_decode($list);
+
+    if (preg_match("/\[.*\]/", $item)) {
+        $item = json_decode($item);
+        for ($index = 0; $index < count($item); $index++)
+            if (!in_array($item[$index], $list)) $list[] = $item[$index];
+    } else if (!in_array($item, $list)) $list[] = $item;
+
+    return json_encode($list);
+}
+
+function remove_string_list($list, $item)
+{
+    $list = json_decode($list);
+    $index = array_search($item, $list);
+
+    if ($index !== false)  unset($list[$index]);
+
+    return json_encode(array_values($list));
+}
+
 function connect()
 {
     $connection = mysqli_connect(DATABASE_HOST, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE);
@@ -47,7 +70,7 @@ function register_user($password, $guest)
 
     $connection = connect();
 
-    $query = "INSERT INTO users(email, salt, hash, cart, favorites) VALUES (?, ?, ?, ?, ?)";
+    $query = "INSERT INTO users(email, salt, hash, inventory, cart, favorites) VALUES (?, ?, ?, '[]', ?, ?)";
     $result = mysqli_prepare($connection, $query);
     $salt = bin2hex(random_bytes(16));
     $hash = md5($password . $salt);
@@ -247,9 +270,7 @@ function user_favorite($session, $id)
 
     if (empty($favorites)) return ["status" => "error"];
 
-    $favorites = json_decode($favorites);
-    if (!in_array($id, $favorites)) $favorites[] = $id;
-    $favorites = json_encode($favorites);
+    $favorites = add_string_list($favorites, $id);
 
     $connection = connect();
 
@@ -291,13 +312,7 @@ function user_unfavorite($session, $id)
 
     if (empty($favorites)) return ["status" => "error"];
 
-    $favorites = json_decode($favorites);
-    $index = array_search($id, $favorites);
-    if (isset($index)) {
-        unset($favorites[$index]);
-        $favorites = array_values($favorites);
-    }
-    $favorites = json_encode($favorites);
+    $favorites = remove_string_list($favorites, $id);
 
     $connection = connect();
 
@@ -339,9 +354,7 @@ function user_cart($session, $id)
 
     if (empty($cart)) return ["status" => "error"];
 
-    $cart = json_decode($cart);
-    if (!in_array($id, $cart)) $cart[] = $id;
-    $cart = json_encode($cart);
+    $cart = add_string_list($cart, $id);
 
     $connection = connect();
 
@@ -372,13 +385,7 @@ function user_uncart($session, $id)
 
     if (empty($cart)) return ["status" => "error"];
 
-    $cart = json_decode($cart);
-    $index = array_search($id, $cart);
-    if (isset($index)) {
-        unset($cart[$index]);
-        $cart = array_values($cart);
-    }
-    $cart = json_encode($cart);
+    $cart = remove_string_list($cart, $id);
 
     $connection = connect();
 
@@ -468,9 +475,33 @@ function complete_order($stripe)
 {
     $connection = connect();
 
-    $query = "UPDATE orders SET complete = 1 WHERE stripe = ?";
+    $query = "SELECT id, user, cart FROM orders WHERE stripe = ?";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_bind_param($result, "s", $stripe);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $id, $user, $cart);
+    mysqli_stmt_fetch($result);
+    mysqli_stmt_close($result);
+
+    $query = "UPDATE orders SET complete = 1 WHERE id = ?";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $id);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_close($result);
+
+    $query = "SELECT inventory FROM users WHERE id = ?";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $user);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $inventory);
+    mysqli_stmt_fetch($result);
+    mysqli_stmt_close($result);
+
+    $inventory = add_string_list($inventory, $cart);
+
+    $query = "UPDATE users SET inventory = ? WHERE id = ?";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "ss", $inventory, $user);
     mysqli_stmt_execute($result);
     mysqli_stmt_close($result);
 
