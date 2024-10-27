@@ -1,7 +1,7 @@
 <?php
 
-require_once "./utilities/post.php";
-require_once "./utilities/database.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/services/utilities/post.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/services/utilities/database.php";
 
 $user = post();
 

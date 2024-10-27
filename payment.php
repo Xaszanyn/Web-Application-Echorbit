@@ -1,8 +1,8 @@
 <?php
 
-require_once "./stripe/init.php";
-require_once "./utilities/configuration.php";
-require_once "./utilities/database.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/services/stripe/init.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/services/utilities/configuration.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/services/utilities/database.php";
 
 try {
     \Stripe\Stripe::setApiKey(STRIPE_SECRET);
