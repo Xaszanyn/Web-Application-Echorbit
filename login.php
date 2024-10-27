@@ -1,7 +1,7 @@
 <?php
 
-require "./utilities/post.php";
-require "./utilities/database.php";
+require_once "./utilities/post.php";
+require_once "./utilities/database.php";
 
 $login = post();
 

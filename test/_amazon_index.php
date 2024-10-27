@@ -1,7 +1,7 @@
 <?php
 
-require "../amazon/aws-autoloader.php";
-require "../utilities/configuration.php";
+require_once "../amazon/aws-autoloader.php";
+require_once "../utilities/configuration.php";
 
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
