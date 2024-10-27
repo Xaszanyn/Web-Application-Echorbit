@@ -2,10 +2,11 @@
 
 require "./stripe/init.php";
 require "./utilities/configuration.php";
-
-\Stripe\Stripe::setApiKey(STRIPE_SECRET);
+require "./utilities/database.php";
 
 try {
+    \Stripe\Stripe::setApiKey(STRIPE_SECRET);
+
     $event = \Stripe\Webhook::constructEvent(@file_get_contents('php://input'), $_SERVER['HTTP_STRIPE_SIGNATURE'], STRIPE_WEBHOOK);
 
     switch ($event['type']) {
@@ -16,6 +17,8 @@ try {
                 'customer' => $session['customer'],
                 'auto_advance' => true,
             ]);
+
+
 
             // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
             file_put_contents('STRIPE_WEBHOOK.txt', print_r($session, true) . "\n____________________________________________________________________________________________________====================================================================================================\n", FILE_APPEND);
@@ -28,7 +31,7 @@ try {
 } catch (\UnexpectedValueException $error) {
     http_response_code(400);
     exit();
-} catch (\Stripe\SignatureVerificationException $e) {
+} catch (\Stripe\SignatureVerificationException $error) {
     http_response_code(400);
     exit();
 }
