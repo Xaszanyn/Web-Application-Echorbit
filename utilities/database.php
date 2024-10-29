@@ -546,7 +546,8 @@ function user_information($session, $name, $phone, $country)
             // 'state' => $customer->address->state,
             // 'postal_code' => $customer->address->postal_code,
             'country' => $country,
-        ]
+        ],
+        'locale' => 'en'
     ]);
 
     $query = "UPDATE users SET name = ?, phone = ?, country = ? WHERE id = ?";
