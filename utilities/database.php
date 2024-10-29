@@ -457,8 +457,6 @@ function create_order_request($session)
 
     mysqli_close($connection);
 
-    file_put_contents("CHECKOUTSESSION.txt", $customer);
-
     $session = \Stripe\Checkout\Session::create([
         'payment_method_types' => ['card'],
         'line_items' => $line_items,
