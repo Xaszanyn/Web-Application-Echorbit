@@ -457,13 +457,22 @@ function create_order_request($session)
 
     mysqli_close($connection);
 
+    file_put_contents("CHECKOUTSESSION.txt", $customer);
+
     $session = \Stripe\Checkout\Session::create([
         'payment_method_types' => ['card'],
         'line_items' => $line_items,
         'mode' => 'payment',
         'success_url' => 'https://echorbitaudio.com/store?success',
         'cancel_url' => 'https://echorbitaudio.com/store?error',
-        'customer' => $customer
+        'customer' => $customer,
+        'customer_email' => 'customer@example.com',
+        'payment_intent_data' => [
+            'billing_details' => [
+                'name' => 'John Doe',
+                'address' => ['country' => 'JP'],
+            ],
+        ],
     ]);
 
     $connection = connect();
