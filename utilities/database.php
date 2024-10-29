@@ -3,6 +3,8 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/services/stripe/init.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/services/utilities/configuration.php";
 
+\Stripe\Stripe::setApiKey(STRIPE_SECRET);
+
 function add_string_list($list, $item)
 {
     $list = json_decode($list);
@@ -65,6 +67,8 @@ function register_email_control($email)
 
 function register_user($password, $guest)
 {
+    $customer = \Stripe\Customer::create([]);
+
     $cart = $favorites = [];
 
     if ($guest != "-") {
@@ -78,11 +82,11 @@ function register_user($password, $guest)
 
     $connection = connect();
 
-    $query = "INSERT INTO users(email, salt, hash, inventory, cart, favorites) VALUES (?, ?, ?, '[]', ?, ?)";
+    $query = "INSERT INTO users(customer, email, salt, hash, inventory, cart, favorites) VALUES (?, ?, ?, ?, '[]', ?, ?)";
     $result = mysqli_prepare($connection, $query);
     $salt = bin2hex(random_bytes(16));
     $hash = md5($password . $salt);
-    mysqli_stmt_bind_param($result, "sssss", $_SESSION["email"], $salt, $hash, $cart, $favorites);
+    mysqli_stmt_bind_param($result, "ssssss", $customer->id, $_SESSION["email"], $salt, $hash, $cart, $favorites);
     mysqli_stmt_execute($result);
     mysqli_stmt_close($result);
 
@@ -158,8 +162,6 @@ function login_user_session($session)
 
 function get_products()
 {
-    \Stripe\Stripe::setApiKey(STRIPE_SECRET);
-
     $data = (\Stripe\Product::all())->data;
 
     $connection = connect();
@@ -228,8 +230,6 @@ function get_categories()
 
 function get_featured_showcase()
 {
-    \Stripe\Stripe::setApiKey(STRIPE_SECRET);
-
     $data = (\Stripe\Product::all())->data;
 
     $connection = connect();
@@ -426,8 +426,6 @@ function create_order_request($session)
     if (intersection_string_list($inventory, $cart)) return ["status" => "intersection"];
 
     $cart_query = str_replace(['[', ']'], ['(', ')'], $cart);
-
-    \Stripe\Stripe::setApiKey(STRIPE_SECRET);
 
     $data = (\Stripe\Product::all())->data;
 
