@@ -463,7 +463,8 @@ function create_order_request($session)
         'mode' => 'payment',
         'success_url' => 'https://echorbitaudio.com/store?success',
         'cancel_url' => 'https://echorbitaudio.com/store?error',
-        'customer_creation' => 'always'
+        'customer_creation' => 'always',
+        'locale' => 'en'
     ]);
 
     $connection = connect();
@@ -547,7 +548,6 @@ function user_information($session, $name, $phone, $country)
             // 'postal_code' => $customer->address->postal_code,
             'country' => $country,
         ],
-        'locale' => 'en'
     ]);
 
     $query = "UPDATE users SET name = ?, phone = ?, country = ? WHERE id = ?";
