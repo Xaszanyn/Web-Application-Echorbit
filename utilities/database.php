@@ -67,7 +67,9 @@ function register_email_control($email)
 
 function register_user($password, $guest)
 {
-    $customer = \Stripe\Customer::create([]);
+    $customer = \Stripe\Customer::create([
+        'email' => $_SESSION["email"],
+    ]);
 
     $cart = $favorites = [];
 
@@ -513,4 +515,48 @@ function complete_order($stripe)
     mysqli_stmt_close($result);
 
     mysqli_close($connection);
+}
+
+function user_information($session, $name, $phone, $country)
+{
+    $connection = connect();
+
+    $query = "SELECT user FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $session);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $user);
+    mysqli_stmt_fetch($result);
+    mysqli_stmt_close($result);
+
+    $query = "SELECT customer FROM users WHERE id = ?";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $user);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $customer);
+    mysqli_stmt_fetch($result);
+    mysqli_stmt_close($result);
+
+    \Stripe\Customer::update($customer, [
+        'name' => $name,
+        'phone' => $phone,
+        'country' => $country,
+        // 'address' =>  [
+        //     'line1' => $customer->address->line1,
+        //     'city' => $customer->address->city,
+        //     'state' => $customer->address->state,
+        //     'postal_code' => $customer->address->postal_code,
+        //     'country' => $country,
+        // ]
+    ]);
+
+    $query = "UPDATE users SET name = ?, phone = ?, country = ?, WHERE id = ?";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "ssss", $name, $phone, $country, $user);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    return ["status" => "success"];
 }

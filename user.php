@@ -21,6 +21,9 @@ switch ($user["action"]) {
     case "checkout":
         $user = create_order_request($user["session"]);
         break;
+    case "information":
+        $user = user_information($user["session"], $user["name"], $user["phone"], $user["country"]);
+        break;
 }
 
 echo json_encode($user);
