@@ -414,11 +414,11 @@ function create_order_request($session)
 {
     $connection = connect();
 
-    $query = "SELECT user, inventory, cart FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
+    $query = "SELECT user, customer, inventory, cart FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_bind_param($result, "s", $session);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $user, $inventory, $cart);
+    mysqli_stmt_bind_result($result, $user, $customer, $inventory, $cart);
     mysqli_stmt_fetch($result);
     mysqli_stmt_close($result);
 
@@ -463,8 +463,7 @@ function create_order_request($session)
         'mode' => 'payment',
         'success_url' => 'https://echorbitaudio.com/store?success',
         'cancel_url' => 'https://echorbitaudio.com/store?error',
-        'customer_creation' => 'always',
-        'locale' => 'en'
+        'customer' => $customer
     ]);
 
     $connection = connect();
@@ -541,13 +540,7 @@ function user_information($session, $name, $phone, $country)
     \Stripe\Customer::update($customer, [
         'name' => $name,
         'phone' => $phone,
-        'address' =>  [
-            // 'line1' => $customer->address->line1,
-            // 'city' => $customer->address->city,
-            // 'state' => $customer->address->state,
-            // 'postal_code' => $customer->address->postal_code,
-            'country' => $country,
-        ],
+        'address' => ['country' => $country]
     ]);
 
     $query = "UPDATE users SET name = ?, phone = ?, country = ? WHERE id = ?";
