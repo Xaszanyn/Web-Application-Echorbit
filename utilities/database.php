@@ -549,7 +549,7 @@ function user_information($session, $name, $phone, $country)
         ]
     ]);
 
-    $query = "UPDATE users SET name = ?, phone = ?, country = ?, WHERE id = ?";
+    $query = "UPDATE users SET name = ?, phone = ?, country = ? WHERE id = ?";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_bind_param($result, "ssss", $name, $phone, $country, $user);
     mysqli_stmt_execute($result);
