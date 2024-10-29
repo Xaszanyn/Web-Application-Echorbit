@@ -540,14 +540,13 @@ function user_information($session, $name, $phone, $country)
     \Stripe\Customer::update($customer, [
         'name' => $name,
         'phone' => $phone,
-        'country' => $country,
-        // 'address' =>  [
-        //     'line1' => $customer->address->line1,
-        //     'city' => $customer->address->city,
-        //     'state' => $customer->address->state,
-        //     'postal_code' => $customer->address->postal_code,
-        //     'country' => $country,
-        // ]
+        'address' =>  [
+            // 'line1' => $customer->address->line1,
+            // 'city' => $customer->address->city,
+            // 'state' => $customer->address->state,
+            // 'postal_code' => $customer->address->postal_code,
+            'country' => $country,
+        ]
     ]);
 
     $query = "UPDATE users SET name = ?, phone = ?, country = ?, WHERE id = ?";
