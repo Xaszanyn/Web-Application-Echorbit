@@ -82,7 +82,7 @@ function register_user($password, $guest)
 
     $connection = connect();
 
-    $query = "INSERT INTO users(customer, email, salt, hash, inventory, cart, favorites) VALUES (?, ?, ?, ?, '[]', ?, ?)";
+    $query = "INSERT INTO users(customer, name, email, phone, country, salt, hash, inventory, cart, favorites) VALUES (?, '—', ?, '—', '—', ?, ?, '[]', ?, ?)";
     $result = mysqli_prepare($connection, $query);
     $salt = bin2hex(random_bytes(16));
     $hash = md5($password . $salt);
