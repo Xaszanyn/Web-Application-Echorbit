@@ -1,9 +1,13 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/services/stripe/init.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/services/utilities/configuration.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/services/stripe/init.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/services/amazon/aws-autoloader.php";
 
 \Stripe\Stripe::setApiKey(STRIPE_SECRET);
+
+use Aws\S3\S3Client;
+use Aws\Exception\AwsException;
 
 function add_string_list($list, $item)
 {
@@ -552,4 +556,47 @@ function user_information($session, $name, $phone, $country)
     mysqli_close($connection);
 
     return ["status" => "success"];
+}
+
+function user_download($session, $id)
+{
+    $connection = connect();
+
+    $query = "SELECT inventory FROM users, sessions WHERE session = ? AND date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND user = users.id";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $session);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $inventory);
+    mysqli_stmt_fetch($result);
+    mysqli_stmt_close($result);
+
+    $inventory = json_decode($inventory);
+
+    if (!in_array($id, $inventory)) return ["status" => "error"];
+
+    $query = "SELECT amazon FROM products WHERE id = ?";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $id);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $amazon);
+    mysqli_stmt_fetch($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    $client = new S3Client([
+        "version" => "latest",
+        "region" => "eu-north-1",
+        "credentials" => [
+            "key" => AWS_ACCESS,
+            "secret" => AWS_SECRET,
+        ],
+    ]);
+
+    $url = (string) $client->createPresignedRequest($client->getCommand("GetObject", [
+        "Bucket" => "echorbit-audio",
+        "Key" => $amazon
+    ]), new DateTime("+1 day"))->getUri();
+
+    return ["status" => "success", "url" => $url];
 }

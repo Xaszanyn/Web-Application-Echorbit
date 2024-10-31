@@ -24,6 +24,9 @@ switch ($user["action"]) {
     case "information":
         $user = user_information($user["session"], $user["name"], $user["phone"], $user["country"]);
         break;
+    case "download":
+        $user = user_download($user["session"], $user["id"]);
+        break;
 }
 
 echo json_encode($user);
