@@ -32,7 +32,7 @@ function register($email)
     $_SESSION["email"] = $email;
     $_SESSION["code"] = mt_rand(100000, 999999);
     $_SESSION["attempt"] = 3;
-    send_mail_text($_SESSION["email"], "VERIFICATION CODE", "VERIFICATION_CODE: <b>" . $_SESSION["code"] . "</b>.");
+    send_mail_text($_SESSION["email"], "Verification Code", "Your verification code is: <b>" . $_SESSION["code"] . "</b>.");
     return json_encode(["status" => "success"]);
 }
 
@@ -68,7 +68,7 @@ function create($code, $password, $guest)
     if ($code != $_SESSION["code"])
         return json_encode(["status" => "code_invalid"]);
 
-    send_mail_text($_SESSION["email"], "REGISTRATION", "REGISTRATION_COMPLETE: TRUE");
+    // Register Mail
     $session = register_user($password, $guest);
     session_destroy();
 
