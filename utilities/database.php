@@ -171,16 +171,16 @@ function get_products()
 
     $connection = connect();
 
-    $query = "SELECT id, type, stripe, category, image, favorite, date, soundcloud, content, feature FROM products";
+    $query = "SELECT id, display, name, type, stripe, category, image, favorite, date, soundcloud, content, feature FROM products";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $id, $type, $stripe, $category, $image, $favorite, $date, $soundcloud, $content, $feature);
+    mysqli_stmt_bind_result($result, $id, $display, $name, $type, $stripe, $category, $image, $favorite, $date, $soundcloud, $content, $feature);
 
     while (mysqli_stmt_fetch($result)) {
         for ($index = 0; $index < count($data); $index++) {
             $product = $data[$index];
             if ($stripe == $product->id) {
-                $name = $product->name;
+                $stripe_name = $product->name;
                 $price = (\Stripe\Price::retrieve($product->default_price))->unit_amount / 100;
                 break;
             }
@@ -188,8 +188,10 @@ function get_products()
 
         $products[] = array(
             'id' => $id,
+            'display' => $display,
             'type' => $type,
             'name' => $name,
+            'stripe_name' => $stripe_name,
             'category' => $category,
             'image' => $image,
             'price' => $price,
