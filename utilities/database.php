@@ -7,7 +7,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/services/amazon/aws-autoloader.php";
 \Stripe\Stripe::setApiKey(STRIPE_SECRET);
 
 use Aws\S3\S3Client;
-use Aws\Exception\AwsException;
 
 function add_string_list($list, $item)
 {
@@ -240,7 +239,7 @@ function get_featured_showcase()
 
     $connection = connect();
 
-    $query = "SELECT id, stripe, image FROM products WHERE id IN (1, 2, 4, 5)";
+    $query = "SELECT id, stripe, image FROM products WHERE id IN (25, 24, 23, 22)";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
     mysqli_stmt_bind_result($result, $id, $stripe, $image);
