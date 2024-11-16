@@ -171,10 +171,10 @@ function get_products()
 
     $connection = connect();
 
-    $query = "SELECT id, display, name, type, stripe, category, image, favorite, date, soundcloud, content, feature FROM products";
+    $query = "SELECT id, display, name, type, stripe, category, image, favorite, date, soundcloud, content, feature, premium FROM products";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $id, $display, $name, $type, $stripe, $category, $image, $favorite, $date, $soundcloud, $content, $feature);
+    mysqli_stmt_bind_result($result, $id, $display, $name, $type, $stripe, $category, $image, $favorite, $date, $soundcloud, $content, $feature, $premium);
 
     while (mysqli_stmt_fetch($result)) {
         for ($index = 0; $index < count($data); $index++) {
@@ -199,7 +199,8 @@ function get_products()
             'date' => $date,
             'soundcloud' => $soundcloud,
             'content' => $content,
-            'feature' => $feature
+            'feature' => $feature,
+            'premium' => $premium
         );
     }
 
