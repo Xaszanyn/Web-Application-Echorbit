@@ -7,4 +7,4 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/services/stripe/init.php";
 
 $data = (\Stripe\Product::all())->data;
 
-print_r($data);
+print_r(json_encode($data));
