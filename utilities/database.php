@@ -235,30 +235,19 @@ function get_categories()
 
 function get_featured_showcase()
 {
-    $data = (\Stripe\Product::all(['limit' => 100]))->data;
-
     $connection = connect();
 
-    $query = "SELECT id, stripe, image FROM products WHERE id IN (25, 24, 23, 22)";
+    $query = "SELECT id, name, image FROM products WHERE id IN (25, 24, 23, 22)";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $id, $stripe, $image);
+    mysqli_stmt_bind_result($result, $id, $name, $image);
 
-    while (mysqli_stmt_fetch($result)) {
-        for ($index = 0; $index < count($data); $index++) {
-            $product = $data[$index];
-            if ($stripe == $product->id) {
-                $name = $product->name;
-                break;
-            }
-        }
-
+    while (mysqli_stmt_fetch($result))
         $products[] = array(
             'id' => $id,
             'name' => $name,
             'image' => $image,
         );
-    }
 
     mysqli_stmt_close($result);
 
