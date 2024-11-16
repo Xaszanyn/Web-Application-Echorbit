@@ -167,7 +167,7 @@ function login_user_session($session)
 
 function get_products()
 {
-    $data = (\Stripe\Product::all())->data;
+    $data = (\Stripe\Product::all(['limit' => 100]))->data;
 
     $connection = connect();
 
@@ -235,7 +235,7 @@ function get_categories()
 
 function get_featured_showcase()
 {
-    $data = (\Stripe\Product::all())->data;
+    $data = (\Stripe\Product::all(['limit' => 100]))->data;
 
     $connection = connect();
 
@@ -432,7 +432,7 @@ function create_order_request($session)
 
     $cart_query = str_replace(['[', ']'], ['(', ')'], $cart);
 
-    $data = (\Stripe\Product::all())->data;
+    $data = (\Stripe\Product::all(['limit' => 100]))->data;
 
     $line_items = [];
 
