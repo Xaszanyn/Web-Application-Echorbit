@@ -477,9 +477,6 @@ function create_order_request($session)
 
 function complete_order($stripe)
 {
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/services/utilities/debug.php";
-    log_text("complete_order() ->" . $stripe);
-
     $connection = connect();
 
     $query = "SELECT id, user, cart FROM orders WHERE stripe = ?";
@@ -489,8 +486,6 @@ function complete_order($stripe)
     mysqli_stmt_bind_result($result, $id, $user, $cart);
     mysqli_stmt_fetch($result);
     mysqli_stmt_close($result);
-
-    log_text("id user cart ->" . $id . ", " . $user . ", " . $cart);
 
     $query = "UPDATE orders SET complete = 1 WHERE id = ?";
     $result = mysqli_prepare($connection, $query);
