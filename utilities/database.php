@@ -4,8 +4,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/services/utilities/configuration.php"
 require_once $_SERVER['DOCUMENT_ROOT'] . "/services/stripe/init.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/services/amazon/aws-autoloader.php";
 
-\Stripe\Stripe::setApiKey(STRIPE_SECRET);
-
 use Aws\S3\S3Client;
 
 function add_string_list($list, $item)
@@ -70,6 +68,8 @@ function registered_email($email)
 
 function register_user($password, $guest)
 {
+    \Stripe\Stripe::setApiKey(STRIPE_SECRET);
+
     $customer = \Stripe\Customer::create([
         'email' => $_SESSION["email"],
     ]);
@@ -483,6 +483,8 @@ function create_order_request($session)
 
     mysqli_close($connection);
 
+    \Stripe\Stripe::setApiKey(STRIPE_SECRET);
+
     $session = \Stripe\Checkout\Session::create([
         'payment_method_types' => ['card'],
         'line_items' => $line_items,
@@ -578,6 +580,8 @@ function user_information($session, $name, $phone, $country)
     mysqli_stmt_bind_result($result, $customer);
     mysqli_stmt_fetch($result);
     mysqli_stmt_close($result);
+
+    \Stripe\Stripe::setApiKey(STRIPE_SECRET);
 
     \Stripe\Customer::update($customer, [
         'name' => $name,
