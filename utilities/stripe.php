@@ -5,14 +5,6 @@ require_once "/home/atjufjlwxjd0/public_html/services/stripe/init.php";
 
 \Stripe\Stripe::setApiKey(STRIPE_SECRET);
 
-/* =========================================*/
-function log_text($message)
-{
-    file_put_contents("/home/atjufjlwxjd0/public_html/services/log.txt", date("Y/m/d | H:i:s") . " | " . $message . "\n", FILE_APPEND);
-}
-log_text("stripe.php V2 initiated.");
-/* =========================================*/
-
 $products = (\Stripe\Product::all(['limit' => 100]))->data;
 
 for ($index = 0; $index < count($products); $index++) {
