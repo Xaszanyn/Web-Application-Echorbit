@@ -51,21 +51,21 @@ function connect()
     return $connection;
 }
 
-function register_email_control($email)
+function registered_email($email)
 {
     $connection = connect();
 
-    $query = "SELECT EXISTS(SELECT * FROM users WHERE email = ?)";
+    $query = "SELECT id FROM users WHERE email = ?";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_bind_param($result, "s", $email);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $exists);
-    mysqli_stmt_fetch($result);
+    mysqli_stmt_bind_result($result, $id);
+    $found = mysqli_stmt_fetch($result);
     mysqli_stmt_close($result);
 
     mysqli_close($connection);
 
-    return !$exists;
+    return $found ? $id : false;
 }
 
 function register_user($password, $guest)
@@ -105,6 +105,35 @@ function register_user($password, $guest)
     mysqli_stmt_execute($result);
     mysqli_stmt_bind_result($result, $id);
     mysqli_stmt_fetch($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    return create_session($id);
+}
+
+function change_registered_users_password($password)
+{
+    $connection = connect();
+
+    $query = "SELECT id FROM users WHERE email = ?";
+    $result = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($result, "s", $_SESSION["email"]);
+    mysqli_stmt_execute($result);
+    mysqli_stmt_bind_result($result, $id);
+    mysqli_stmt_fetch($result);
+    mysqli_stmt_close($result);
+
+    mysqli_close($connection);
+
+    $connection = connect();
+
+    $query = "UPDATE users SET salt = ?, hash = ? WHERE id = ?";
+    $result = mysqli_prepare($connection, $query);
+    $salt = bin2hex(random_bytes(16));
+    $hash = md5($password . $salt);
+    mysqli_stmt_bind_param($result, "sss", $salt, $hash, $id);
+    mysqli_stmt_execute($result);
     mysqli_stmt_close($result);
 
     mysqli_close($connection);
