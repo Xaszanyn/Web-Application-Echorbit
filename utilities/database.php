@@ -196,7 +196,8 @@ function login_user_session($session)
 
 function get_products()
 {
-    $data = (\Stripe\Product::all(['limit' => 100]))->data;
+    // $data = (\Stripe\Product::all(['limit' => 100]))->data;
+    $data = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/services/utilities/stripe.json"));
 
     $connection = connect();
 
@@ -453,7 +454,8 @@ function create_order_request($session)
 
     $cart_query = str_replace(['[', ']'], ['(', ')'], $cart);
 
-    $data = (\Stripe\Product::all(['limit' => 100]))->data;
+    // $data = (\Stripe\Product::all(['limit' => 100]))->data;
+    $data = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/services/utilities/stripe.json"));
 
     $line_items = [];
 
