@@ -196,8 +196,7 @@ function login_user_session($session)
 
 function get_products()
 {
-    // $data = (\Stripe\Product::all(['limit' => 100]))->data;
-    $data = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/services/utilities/stripe.json"));
+    $stripe_products = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/services/utilities/stripe.json"));
 
     $connection = connect();
 
@@ -207,11 +206,11 @@ function get_products()
     mysqli_stmt_bind_result($result, $id, $display, $name, $type, $stripe, $category, $image, $favorite, $date, $soundcloud, $content, $feature, $premium);
 
     while (mysqli_stmt_fetch($result)) {
-        for ($index = 0; $index < count($data); $index++) {
-            $product = $data[$index];
+        for ($index = 0; $index < count($stripe_products); $index++) {
+            $product = $stripe_products[$index];
             if ($stripe == $product->id) {
                 $stripe_name = $product->name;
-                $price = (\Stripe\Price::retrieve($product->default_price))->unit_amount / 100;
+                $price = $product->price;
                 break;
             }
         }
