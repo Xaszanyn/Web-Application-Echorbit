@@ -453,10 +453,7 @@ function create_order_request($session)
 
     $cart_query = str_replace(['[', ']'], ['(', ')'], $cart);
 
-    // $data = (\Stripe\Product::all(['limit' => 100]))->data;
-    $data = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/services/utilities/stripe.json"));
-
-    $line_items = [];
+    $stripe_products = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/services/utilities/stripe.json"));
 
     $connection = connect();
 
@@ -466,8 +463,8 @@ function create_order_request($session)
     mysqli_stmt_bind_result($result, $stripe);
 
     while (mysqli_stmt_fetch($result)) {
-        for ($index = 0; $index < count($data); $index++) {
-            $product = $data[$index];
+        for ($index = 0; $index < count($stripe_products); $index++) {
+            $product = $stripe_products[$index];
             if ($stripe == $product->id) {
                 $line_items[] = [
                     'price' => $product->default_price,
