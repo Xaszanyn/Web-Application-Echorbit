@@ -22,4 +22,4 @@ for ($index = 0; $index < count($products); $index++) {
         $products[$index]->price = (\Stripe\Price::retrieve($products[$index]->default_price))->unit_amount / 100;
 }
 
-file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/services/utilities/stripe.json", json_encode($DATADATADATA, JSON_PRETTY_PRINT));
+file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/services/utilities/stripe.json", json_encode($products, JSON_PRETTY_PRINT));
