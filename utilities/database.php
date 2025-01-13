@@ -539,6 +539,22 @@ function complete_order($stripe)
     mysqli_stmt_close($result);
 
     mysqli_close($connection);
+
+    $cart = json_decode($cart);
+
+    for ($index = 0; $index < count($cart); $index++) {
+        $connection = connect();
+
+        $query = "UPDATE products SET purchase = purchase + 1 WHERE id = ?";
+        $result = mysqli_prepare($connection, $query);
+        $product  = $cart[$index];
+        mysqli_stmt_bind_param($result, "s", $product);
+        mysqli_stmt_execute($result);
+
+        mysqli_stmt_close($result);
+
+        mysqli_close($connection);
+    }
 }
 
 function user_information($session, $name, $phone, $country)
