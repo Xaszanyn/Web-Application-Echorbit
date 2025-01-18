@@ -2,6 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/services/utilities/post.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/services/utilities/database.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/services/utilities/mail.php";
 
 $user = post();
 
@@ -26,6 +27,10 @@ switch ($user["action"]) {
         break;
     case "download":
         $user = user_download($user["session"], $user["id"]);
+        break;
+    case "contact":
+        send_mail_text("ekinaslant@gmail.com", "New Contact Message", "Name: " . $user["name"] . "<br />Email: " . $user["email"] . "<br />Phone: " . $user["phone"] . "<br />Message: " . $user["message"]);
+        $user = ["status" => "success"];
         break;
 }
 
