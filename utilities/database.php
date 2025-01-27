@@ -244,7 +244,7 @@ function get_categories()
 {
     $connection = connect();
 
-    $query = "SELECT id, type, name, image FROM categories";
+    $query = "SELECT id, type, name FROM categories";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
     mysqli_stmt_bind_result($result, $id, $type, $name, $image);
