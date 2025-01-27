@@ -247,14 +247,13 @@ function get_categories()
     $query = "SELECT id, type, name FROM categories";
     $result = mysqli_prepare($connection, $query);
     mysqli_stmt_execute($result);
-    mysqli_stmt_bind_result($result, $id, $type, $name, $image);
+    mysqli_stmt_bind_result($result, $id, $type, $name);
 
     while (mysqli_stmt_fetch($result)) {
         $categories[] = array(
             'id' => $id,
             'type' => $type,
             'name' => $name,
-            'image' => $image,
         );
     }
 
