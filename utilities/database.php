@@ -487,6 +487,7 @@ function create_order_request($session)
         'success_url' => 'https://echorbitaudio.com/store?success',
         'cancel_url' => 'https://echorbitaudio.com/store?error',
         'customer' => $customer,
+        'billing_address_collection' => 'required'
     ]);
 
     $connection = connect();
